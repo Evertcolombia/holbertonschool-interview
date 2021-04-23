@@ -18,8 +18,8 @@ def canUnlockAll(boxes):
     thisset = [0]
 
     for key in thisset:
-        for k in boxes[key]: 
-            if k  < len(boxes) and k not in thisset:
+        for k in boxes[key]:
+            if k < len(boxes) and k not in thisset:
                 thisset.append(k)
 
     if len(thisset) == len(boxes):
