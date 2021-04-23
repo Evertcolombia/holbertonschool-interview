@@ -1,23 +1,26 @@
 #!/usr/bin/python3
-
-"Look boxes"""
+"""
+Lock boxes
+"""
 
 
 def canUnlockAll(boxes):
     """
-    ou have n number of locked boxes in front of you.
+    you have n number of locked boxes in front of you.
     Each box is numbered sequentially from 0 to n - 1 and
     each box may contain keys to the other boxes.
+
+    Args:
+    boxes (list of boxes) : List
+    Returns:
+    True if all boxes can be opened, otherwise False
     """
-    thisset = set ()
+    thisset = [0]
 
-    for key in boxes:
-        if (key):
-            if key[0] < len(boxes):
-                thisset.add(key[0])
-
-    if not 0  in thisset:
-        thisset.add(0)
+    for key in thisset:
+        for k in boxes[key]: 
+            if k  < len(boxes) and k not in thisset:
+                thisset.append(k)
 
     if len(thisset) == len(boxes):
         return True
