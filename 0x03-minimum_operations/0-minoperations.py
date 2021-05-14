@@ -6,9 +6,8 @@ needed to result in exactly n H characters in the file.
 
 
 def minOperations(n):
-    """ 
+    """
     look for min operations onf file
-    return: int
     """
 
     cont = n
@@ -26,3 +25,4 @@ def minOperations(n):
             i = i + 1
 
     return res
+
