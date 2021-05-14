@@ -4,7 +4,12 @@ method that calculates the fewest number of operations
 needed to result in exactly n H characters in the file.
 """
 
+
 def minOperations(n):
+    """ 
+    look for min operations onf file
+    """
+
     cont = n
     res = 0
     i = 2
@@ -18,5 +23,5 @@ def minOperations(n):
             res = res + i
         else:
             i = i + 1
-        
+
     return res
