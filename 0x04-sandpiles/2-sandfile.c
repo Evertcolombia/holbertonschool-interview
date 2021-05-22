@@ -13,12 +13,11 @@ void sandpiles_sum(int grid1[3][3], int grid2[3][3])
 	int unstable = 0;
 
 	unstable = grid_sum(grid1, grid2, unstable);
-
 	if (unstable != 0)
 	{
-		printf("=\n");
-		print_grid(grid1);
 		process_sandpile(grid1);
+		printf("\n");
+		print_grid(grid1);
 	}
 
 }
@@ -52,32 +51,43 @@ int grid_sum(int grid1[3][3], int grid2[3][3], int flag)
 
 void process_sandpile(int grid[3][3])
 {
-	int unstable = 0, c= 0;
 
-	(grid[0][0] > 3) ? grid[0][1]++, grid[1][0]++, grid[0][0] -= 4 : 0;
-	(grid[0][2] > 3) ? grid[0][1]++, grid[1][2]++, grid[0][2] -= 4 : 0;
-	(grid[2][0] > 3) ? grid[1][0]++, grid[2][1]++, grid[2][0] -= 4 : 0;
-	(grid[2][2] > 3) ? grid[2][1]++, grid[1][2]++, grid[2][2] -= 4 : 0;
+	int i = 0, c = 0, f = 2, f2 = 2;
+	int unstable = 0; 
 
-	(grid[0][1] > 3) ? grid[0][0]++, grid[0][2]++, c++, grid[0][1] -= 4 : 0;
-	(grid[1][0] > 3) ? grid[0][0]++, grid[2][0]++, c++, grid[1][0] -= 4 : 0;
-	(grid[1][2] > 3) ? grid[0][2]++, grid[2][2]++, c++, grid[1][2] -= 4 : 0;
-	(grid[2][1] > 3) ? grid[2][0]++, grid[2][2]++, c++, grid[2][1] -= 4 : 0;
-	(c > 0) ? grid[1][1] += c : 0;
-
-	if (grid[1][1] > 3)
+	for (c = 0, f2 = 2; i < 3; c++, f2--)
 	{
-		grid[0][1] += 1, grid[1][0] += 1;
-		grid[1][2] += 1, grid[2][1] += 1;
-		grid[1][1] -= 4;;
-	}
+		if (c == 3)
+			i++, f--, c =0, f2 = 2;
+		if (i == 3)
+			break;
+		
+		if (grid[i][c] > 3)
+		{
+			(c < 2) ? grid[i][c + 1] += 1 : 0;
+			(i < 2) ? grid[i + 1][c] += 1 : 0;
+			(c > 0) ? grid[i][c - 1] += 1 : 0;
+			(i > 0) ? grid[i - 1][c] += 1 : 0;
+			grid[i][c] -= 4;
+		}
 
+		if (i == f && c == f2)
+			break;
+		if (grid[f][f2] > 3)
+		{
+			(f2 < 2) ? grid[f][f2 + 1] += 1 : 0;
+			(f < 2) ? grid[f + 1][f2] += 1 : 0;
+			(f2 > 0) ? grid[f][f2 - 1] += 1 : 0;
+			(f > 0) ? grid[f - 1][f2] += 1 : 0;
+			grid[f][f2] -= 4;
+		}
+	}
 	unstable = is_unstable(grid);
 
 	if (unstable)
 	{
-		printf("=\n");
 		print_grid(grid);
+		printf("\n");
 		process_sandpile(grid);
 	}
 }
