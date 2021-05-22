@@ -52,13 +52,13 @@ int grid_sum(int grid1[3][3], int grid2[3][3], int flag)
 void process_sandpile(int grid[3][3])
 {
 
-	int i = 0, c = 0, f = 2, f2 = 2;
+	int i = 0, c = 0;
 	int unstable = 0; 
 
-	for (c = 0, f2 = 2; i < 3; c++, f2--)
+	for (c = 0; i < 3; c++)
 	{
 		if (c == 3)
-			i++, f--, c =0, f2 = 2;
+			i++, c =0;
 		if (i == 3)
 			break;
 		
@@ -69,17 +69,6 @@ void process_sandpile(int grid[3][3])
 			(c > 0) ? grid[i][c - 1] += 1 : 0;
 			(i > 0) ? grid[i - 1][c] += 1 : 0;
 			grid[i][c] -= 4;
-		}
-
-		if (i == f && c == f2)
-			break;
-		if (grid[f][f2] > 3)
-		{
-			(f2 < 2) ? grid[f][f2 + 1] += 1 : 0;
-			(f < 2) ? grid[f + 1][f2] += 1 : 0;
-			(f2 > 0) ? grid[f][f2 - 1] += 1 : 0;
-			(f > 0) ? grid[f - 1][f2] += 1 : 0;
-			grid[f][f2] -= 4;
 		}
 	}
 	unstable = is_unstable(grid);
