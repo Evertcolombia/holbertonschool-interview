@@ -1,12 +1,56 @@
 #!/usr/bin/python3
+""" Log parsing for stdin """
 
-import signal
+from signal import signal, SIGINT
 import sys
 from datetime import datetime
 
-""" Log parsing for stdin """
+if __name__ == "__main__":
 
-def main():
+    def validate_date(date):
+        """validate date time"""
+        try:
+            dateStr = "%Y-%m-%d %H:%M:%S.%f"
+            return bool(datetime.strptime(date, dateStr))
+        except ValueError:
+            return False
+
+    def validate_ip(ip):
+        """validate ip adress"""
+
+        try:
+            ip = ip.split('.')
+            return len(ip) == 4 \
+                and all(-1 < len(p) < 4 and 0 <= int(p) < 256 for p in ip)
+        except ValueError:
+            return False    # a part of the ip cant be int
+        except (AttributeError, TypeError):
+            return False    # ip isnt a string
+
+    def print_status():
+        """print function"""
+
+        print("File size: {}".format(size))
+        for k, v in codes.items():
+            print("{}: {}".format(k, v))
+        return 0
+
+    def line_test(line):
+        """Test each line format"""
+
+        if len(line) != 9:
+            return False
+        if validate_ip(line[0]) is False:
+            return False
+        if validate_date(line[2][1:] + " " + line[3][:-1]) is False:
+            return False
+        return True if line[-2] in codes.keys() else False
+
+    def handler(signal_received, frame):
+        """signal handler"""
+        print_status()
+        sys.exit(0)
+
     size = 0
     count = 0
     codes = {
@@ -15,60 +59,13 @@ def main():
     }
 
     for line in sys.stdin:
+        signal(SIGINT, handler)
+
+        if count == 10:
+            count = print_status()
+
         line = line.split()
         if line_test(line):
-            if line[-2] in codes.keys():
-                codes[line[-2]] += 1
+            codes[line[-2]] += 1
             size += int(line[-1])
-
         count += 1
-        if count == 10:
-            count = print_status(size, codes)
-
-
-def print_status(size, codes):
-    print("File size: {}".format(size))
-    for k, v in codes.items():
-        print("{}: {}".format(k, v))
-    return 0
-
-
-def validate_ip(ip):
-    try:
-        ip = ip.split('.')
-        return len(ip) == 4 \
-            and all(0 < len(part) < 4 and 0 <= int(part) < 256 for part in ip)
-    except ValueError:
-        return False    # a part cant be converted to int
-    except (AttributeError, TypeError):
-        return False    # ip isn't even a string
-
-
-def validate_date(date):
-    try:
-        return bool(datetime.strptime(date, "%Y-%m-%d %H:%M:%S.%f"))
-    except ValueError:
-        return False
-
-
-def line_test(line):
-    com = '"GET /projects/260 HTTP/1.1"'
-    lineCom = line[4] + " " + line[5] + " " + line[6]
-    valid = False
-
-    if len(line) != 9:
-        return Valid
-
-    valid = validate_ip(line[0])
-
-    if line[1] != '-':
-        return False
-
-    valid = validate_date(line[2][1:] + " " + line[3][:-1])
-    if not valid or com != lineCom:
-        return False
-    return True if int(line[-1]) else False
-
-
-main()
-    
