@@ -7,6 +7,12 @@ from datetime import datetime
 
 if __name__ == "__main__":
 
+    size = 0
+    codes = {
+        '200': 0, '301': 0, '400': 0, '401': 0,
+        '403': 0, '404': 0, '405': 0, '500': 0
+    }
+
     def validate_date(date):
         """validate date time"""
         try:
@@ -27,20 +33,21 @@ if __name__ == "__main__":
         except (AttributeError, TypeError):
             return False    # ip isnt a string
 
-    def print_status():
+    def print_status(codes):
         """print function"""
-
-        print("File size: {}".format(size))
-        for k, v in codes.items():
-            if v > 0:
-                print("{}: {}".format(k, v))
+        cod = sorted(codes.keys())
+        print("File size: {:d}".format(size))
+        for i in cod:
+            if codes[i] > 0:
+                print("{}: {}".format(i, codes[i]))
         return 0
 
     def line_test(line):
         """Test each line format"""
 
-        if len(line) != 9:
+        if len(line) < 2:
             return False
+
         if validate_ip(line[0]) is False:
             return False
         if validate_date(line[2][1:] + " " + line[3][:-1]) is False:
@@ -49,24 +56,23 @@ if __name__ == "__main__":
 
     def handler(signal_received, frame):
         """signal handler"""
-        print_status()
+        print_status(codes)
         sys.exit(0)
 
-    size = 0
     count = 0
-    codes = {
-        '200': 0, '301': 0, '400': 0, '401': 0,
-        '403': 0, '404': 0, '405': 0, '500': 0
-    }
 
     for line in sys.stdin:
         signal(SIGINT, handler)
-
-        if count == 10:
-            count = print_status()
+        count += 1
 
         line = line.split()
         if line_test(line):
             codes[line[-2]] += 1
-        size += int(line[-1])
-        count += 1
+
+        try:
+            size += int(line[-1])
+        except:
+            pass
+
+        if count == 10:
+            count = print_status(codes)
