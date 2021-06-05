@@ -32,7 +32,8 @@ if __name__ == "__main__":
 
         print("File size: {}".format(size))
         for k, v in codes.items():
-            print("{}: {}".format(k, v))
+            if v > 0:
+                print("{}: {}".format(k, v))
         return 0
 
     def line_test(line):
@@ -44,7 +45,7 @@ if __name__ == "__main__":
             return False
         if validate_date(line[2][1:] + " " + line[3][:-1]) is False:
             return False
-        return True if line[-2] in codes.keys() else False
+        return True if line[-2] in codes.keys() and int(line[-2]) else False
 
     def handler(signal_received, frame):
         """signal handler"""
@@ -67,5 +68,5 @@ if __name__ == "__main__":
         line = line.split()
         if line_test(line):
             codes[line[-2]] += 1
-            size += int(line[-1])
+        size += int(line[-1])
         count += 1
