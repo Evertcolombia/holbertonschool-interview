@@ -4,7 +4,7 @@
 if __name__ == '__main__':
 
     def printer(size, d):
-        """Printer function"""
+        """Prainter function"""
         a = sorted(d.keys())
         print("File size: {:d}".format(size))
         for i in a:
