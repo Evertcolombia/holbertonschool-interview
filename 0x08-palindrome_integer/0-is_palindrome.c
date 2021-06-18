@@ -1,5 +1,6 @@
 #include "palindrome.h"
 #include <stdio.h>
+
 /**
  * is_palindrome - check if a number is palindrome
  * @n: unsigned long number to test
@@ -8,21 +9,31 @@
  */
 int is_palindrome(unsigned long n)
 {
-	unsigned long reverse = 0, remainder = 0, or = 0;
+	unsigned long reverse = 0, res = 0;
 
-	or = n;
-	while (n != 0)
-	{
-		remainder = n % 10;
-		printf("remainder: %d\n", (int) remainder);
-		reverse = reverse * 10 + remainder;
-		printf("reverse: %d\n", (int)reverse);
-		n /= 10;
-		printf("n: %d\n", (int)n);
-	}
+	if (n != 0)
+		reverse = test(n, reverse);
 
-	if (or == reverse)
-		return (1);
-	else
-		return (0);
+	res = (n == reverse) ? 1 : 0;
+	return (res);
+}
+
+/**
+ * test - check palindrome number using recursion
+ * @n: number to traverse
+ * @reverse: encapsulate the  reverse stack
+ *
+ * Return: reverse
+ */
+unsigned long test(unsigned long n, unsigned long reverse)
+{
+	unsigned long remainder = 0;
+
+	remainder = n % 10;
+	reverse = reverse * 10 + remainder;
+	n /= 10;
+
+	if (n != 0)
+		reverse = test(n, reverse);
+	return (reverse);
 }
