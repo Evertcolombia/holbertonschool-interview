@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 from itertools import takewhile
 
+
 def to_bits(bytes):
     for byte in bytes:
         num = []
