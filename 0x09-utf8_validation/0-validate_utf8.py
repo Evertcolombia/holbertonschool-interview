@@ -18,7 +18,6 @@ def validUTF8(data):
 
         :type data: List[int]
     """
-
     bits = to_bits(data)
     for byte in bits:
         # single byte char
