@@ -1,66 +1,41 @@
 #include "lists.h"
-#include <stdio.h>
-listint_t *recursive_iter(listint_t **curr, listint_t  *new, int n);
-listint_t *insert_node_orded(listint_t **curr, listint_t *new);
 
 /**
- * listint_t *insert_node - insert node in sorted list
- * @head: double pointer to lis head
- * @number: number to sort
+ * insert_node - inset node in sorted linked list
+ * @head: double pointer to head node
+ * @number: number to save
  *
- * Return: new node
+ * Return: new node or Null
  */
 listint_t *insert_node(listint_t **head, int number)
 {
-	listint_t *new = NULL, *curr = NULL;
+	listint_t *new;
+	listint_t *current;
+	listint_t *currNext;
 
-	curr = *head;
+	current = *head;
 
 	new = malloc(sizeof(listint_t));
 	if (new == NULL)
 		return (NULL);
-
-	new->next = NULL;
 	new->n = number;
+	new->next = NULL;
 
-	if (curr == NULL || number < curr->n)
+	if (*head == NULL || number < (*head)->n)
 	{
-		*head = new;
 		new->next = *head;
+		*head = new;
 		return (new);
 	}
-
-	return (recursive_iter(&curr->next, new, number));
-}
-
-/**
- * listint_t *recursive_iter - recursive iteration
- * @curr: current node place
- * @new: node to set in the list
- * @n: number to compare
- *
- * Return: Node on success
- */
-listint_t *recursive_iter(listint_t **curr, listint_t  *new, int n)
-{
-	if (n >= (*curr)->n && !(*curr)->next)
-		return (insert_node_orded(curr, new));
-	else if (n >= (*curr)->n && n <= (*curr)->next->n)
-		return (insert_node_orded(curr, new));
-
-	return (recursive_iter(&(*curr)->next, new, n));
-}
-
-/**
- * insert_node - inser the node in the list
- * @curr: current node
- * @new: new node to return
- *
- * Return: new node
- */
-listint_t *insert_node_orded(listint_t **curr, listint_t *new)
-{
-	new->next = (*curr)->next;
-	(*curr)->next = new;
+	currNext = current->next;
+	while (current->next != NULL)
+	{
+		if (number >= current->n && number <= currNext->n)
+		{
+			current->next = new, new->next = currNext;
+			break;
+		}
+		current = current->next, currNext = currNext->next;
+	}
 	return (new);
 }
