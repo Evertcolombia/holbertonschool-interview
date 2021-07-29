@@ -1,3 +1,11 @@
-# holbertonschool-interview
+# Insert node in sorted linked list
 
-# Insert node in linked list by a sorted way
+# USAGE
+---------
+
+## compile program using GCC
+
+    $ gcc -Wall -Werror -Wextra -pedantic 0-main.c linked_lists.c 0-insert_number.c -o insert
+
+    example:
+        - ./insert
