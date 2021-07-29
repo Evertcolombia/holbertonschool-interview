@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 from itertools import takewhile
 
+
 def to_bits(bytes):
     for byte in bytes:
         num = []
@@ -17,7 +18,6 @@ def validUTF8(data):
 
         :type data: List[int]
     """
-
     bits = to_bits(data)
     for byte in bits:
         # single byte char
