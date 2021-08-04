@@ -32,29 +32,44 @@ heap_t *heap_insert(heap_t **root, int value)
 
 	while (queue->size > 0)
 	{
-		actual_queue = link_dequeue(&queue);
+		actual_queue = link_dequeue(&queue, &control);
+		new->parent = actual_queue->node;
+
+		if (actual_queue->node->left == NULL)
+		{
+			actual_queue->node->left = new;
+
+			if (new->parent == NULL)
+				*root = new;
+			break;
+		}
+		else if (actual_queue->node->right == NULL)
+		{
+			actual_queue->node->right = new;
+
+			if (new->parent == NULL)
+				*root = new;
+			break;
+		}
+		else
+		{
+			link_enqueue(&queue, actual_queue->node->left, &control);
+			link_enqueue(&queue, actual_queue->node->right, &control);
+		}
 	}
-	/*if (tmp->left == NULL)
-	{
-		tmp->left = new;
-		new->parent = tmp;
-	}
-	else if (tmp->right == NULL)
-	{
-		tmp->right = new;
-		new->parent = tmp;
-	}*/		
+	link_queue_free(&queue, &control);
+	return (new);
 }
 
 
 /**
  * link_enqueue - create queue (link list) or insert new element
  * @new: new node to insert
- * @c_queue: controller object for the queue list
+ * @control: controller object for the queue list
  *
  * Return: None
  */
-void link_enqueue(q_list **queue, heap_t *new, c_list **c_queue)
+void link_enqueue(q_list **queue, heap_t *new, c_list **control)
 {
 	q_list *tmp = NULL, *new_queue = NULL;
 
@@ -67,12 +82,12 @@ void link_enqueue(q_list **queue, heap_t *new, c_list **c_queue)
 		tmp->node = new;
 		tmp->next = NULL;
 
-		*c_queue = malloc(sizeof(c_list));
-		if (*c_queue == NULL)
+		*control = malloc(sizeof(c_list));
+		if (*control == NULL)
 			return;
-		(*c_queue)->head = tmp;
-		(*c_queue)->last_in = tmp;
-		(*c_queue)->size++;
+		(*control)->head = tmp;
+		(*control)->last_in = tmp;
+		(*control)->size++;
 		return;
 	}
 	new_queue = malloc(sizeof(q_list));
@@ -81,9 +96,9 @@ void link_enqueue(q_list **queue, heap_t *new, c_list **c_queue)
 	new_queue->node = new;
 	new_queue->next = NULL;
 
-	(*c_queue)->last_in->next = new_queue;
-	(*c_queue)->size++;
-	(*c_queue)->last_in = new_queue;
+	(*control)->last_in->next = new_queue;
+	(*control)->size++;
+	(*control)->last_in = new_queue;
 }
 
 /**
@@ -92,10 +107,38 @@ void link_enqueue(q_list **queue, heap_t *new, c_list **c_queue)
  *
  * Return: dequeue node that nows is not in the linked list
  */
-q_list *link_dequeue(q_list **queue)
+q_list *link_dequeue(q_list **queue, c_list **control)
 {
 	q_list *tmp = *queue;
 
 	*queue = (*queue)->next;
+	
+	if (tmp->node == control->head->node)
+	{
+		(*control)->head = NULL;
+		(*control)->last_in = NULL;
+		(*control)->size--;
+	}
 	return (tmp);
+}
+
+
+/**
+ * link_queue_free - free a queue and controlller
+ * @queue: queue linked list
+ * @control: controller for the queue list
+ *
+ * Return: None 
+ */
+void link_queue_free(q_list *queue, c_list *control)
+{
+	q_list *tmp = NULL;
+
+	while (control->size > 0)
+	{
+		tmp = queue;
+		queue = queue->next;
+		free(tmp);	
+	}
+	free(control);
 }
