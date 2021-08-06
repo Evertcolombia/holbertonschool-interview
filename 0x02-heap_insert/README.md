@@ -8,14 +8,19 @@ Program to create a binary tree and mannage it as Heap binary tree
 ## Files
 ---------
 
-- [0-insert_number.c](#) Program using recursion
-- [0-insert_number_while_loop.c](#) Program using loop
+- [0-binary_tree_node.c](#) create a binary tree node function
+- [1-heap_insert.c](#) insert a node in a heap binary tree functions
 # USAGE
 ---------
 
 ## compile program using GCC
 
-    $ gcc -Wall -Werror -Wextra -pedantic 0-main.c linked_lists.c 0-insert_number.c -o insert
+    /0x02-heap_insert$ gcc -Wall -Wextra -Werror -pedantic binary_tree_print.c 0-main.c 0-binary_tree_node.c -o 0-node
 
-    example:
-        - ./insert
+    Now run the program to create a binary tree
+    $ ./0-node
+
+    /0x02-heap_insert$ gcc -Wall -Wextra -Werror -pedantic binary_tree_print.c 1-main.c 1-heap_insert.c 0-binary_tree_node.c -o 1-heap_insert
+
+    Now run the program to create a max heap binary tree
+    $ ./1-heap_insert

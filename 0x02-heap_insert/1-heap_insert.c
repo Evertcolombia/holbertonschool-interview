@@ -9,43 +9,42 @@
  */
 heap_t *heap_insert(heap_t **root, int value)
 {
-	heap_t *new = NULL, *actual_node = NULL, *tmp = *root;
-	q_list *queue = NULL, *actual_queue NULL;
+	heap_t *new = NULL, *tmp = NULL;
+	q_list *queue = NULL, *actual_queue = NULL;
 	c_list *control = NULL;
-
 	
 	if (root == NULL)
 		return (NULL);
 
-	if (tmp == NULL)
+	if (*root == NULL)
 	{
-		tmp = binary_tree_node(NULL, value);
-		return (tmp);
+		*root = binary_tree_node(NULL, value);
+		return (*root);
 	}
 
 	new = binary_tree_node(NULL, value);
 	if (new == NULL)
 		return (NULL);
 
-	enqueue(&queue, tmp, &control);
+	link_enqueue(&queue, *root, &control);
 
-
-	while (queue->size > 0)
+	while (control->size > 0)
 	{
 		actual_queue = link_dequeue(&queue, &control);
 		new->parent = actual_queue->node;
-
-		if (actual_queue->node->left == NULL)
+		tmp =  actual_queue->node;
+		free(actual_queue);
+		if (tmp->left == NULL)
 		{
-			actual_queue->node->left = new;
+			tmp->left = new;
 
 			if (new->parent == NULL)
 				*root = new;
 			break;
 		}
-		else if (actual_queue->node->right == NULL)
+		else if (tmp->right == NULL)
 		{
-			actual_queue->node->right = new;
+			tmp->right = new;
 
 			if (new->parent == NULL)
 				*root = new;
@@ -53,14 +52,13 @@ heap_t *heap_insert(heap_t **root, int value)
 		}
 		else
 		{
-			link_enqueue(&queue, actual_queue->node->left, &control);
-			link_enqueue(&queue, actual_queue->node->right, &control);
+			link_enqueue(&queue, tmp->left, &control);
+			link_enqueue(&queue, tmp->right, &control);
 		}
 	}
-	link_queue_free(&queue, &control);
+	link_queue_free(queue, control);
 	return (new);
 }
-
 
 /**
  * link_enqueue - create queue (link list) or insert new element
@@ -71,23 +69,25 @@ heap_t *heap_insert(heap_t **root, int value)
  */
 void link_enqueue(q_list **queue, heap_t *new, c_list **control)
 {
-	q_list *tmp = NULL, *new_queue = NULL;
+	q_list *new_queue = NULL;
 
-	tmp = *queue;
-	if (tmp == NULL)
+	if (*queue == NULL)
 	{
-		tmp = malloc(sizeof(q_list));
-		if (tmp == NULL)
+		*queue = malloc(sizeof(q_list));
+		if (*queue == NULL)
 			return;
-		tmp->node = new;
-		tmp->next = NULL;
+		(*queue)->node = new;
+		(*queue)->next = NULL;
 
-		*control = malloc(sizeof(c_list));
 		if (*control == NULL)
-			return;
-		(*control)->head = tmp;
-		(*control)->last_in = tmp;
-		(*control)->size++;
+		{
+			*control = malloc(sizeof(c_list));
+			if (*control == NULL)
+				return;
+		}
+		(*control)->head = *queue;
+		(*control)->last_in = *queue;
+		(*control)->size = 1;
 		return;
 	}
 	new_queue = malloc(sizeof(q_list));
@@ -109,19 +109,17 @@ void link_enqueue(q_list **queue, heap_t *new, c_list **control)
  */
 q_list *link_dequeue(q_list **queue, c_list **control)
 {
-	q_list *tmp = *queue;
+	q_list *tmp = NULL;
 
+	tmp = *queue;
 	*queue = (*queue)->next;
-	
-	if (tmp->node == control->head->node)
-	{
-		(*control)->head = NULL;
-		(*control)->last_in = NULL;
-		(*control)->size--;
-	}
+	if (tmp->node == (*control)->head->node)
+		(*control)->head = *queue;
+	if (tmp->node == (*control)->last_in->node)
+		(*control)->last_in = *queue;
+	(*control)->size--;
 	return (tmp);
 }
-
 
 /**
  * link_queue_free - free a queue and controlller
@@ -138,7 +136,8 @@ void link_queue_free(q_list *queue, c_list *control)
 	{
 		tmp = queue;
 		queue = queue->next;
-		free(tmp);	
+		free(tmp);
+		control->size--;
 	}
 	free(control);
 }
