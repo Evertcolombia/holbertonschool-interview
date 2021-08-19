@@ -91,23 +91,23 @@ void process_sandpile(int grid[3][3])
 
 				if (i > 0)
 				{
-					num = grid[i - 1][j]++;
-					uns = (num >= 4) ? uns + 1 : uns;
+					num = ++grid[i - 1][j];
+					uns += (num >= 4) ? 1 : 0;
 				}
 				if (i < 2)
 				{
-					num = grid[i + 1][j]++;
-					uns = (num >= 4) ? uns + 1 : uns;
+					num = ++grid[i + 1][j];
+					uns += (num >= 4) ? 1 : 0;
 				}
 				if (j > 0)
 				{
-					num = grid[i][j - 1]++;
-					uns = (num >= 4) ? uns + 1 : uns;
+					num = ++grid[i][j - 1];
+					uns += (num >= 4) ? 1 : 0;
 				}
 				if (j < 2)
 				{
-					num = grid[i][j + 1]++;
-					uns = (num >= 4) ? uns + 1: uns;
+					num = ++grid[i][j + 1];
+					uns += (num >= 4) ? 1 : 0;
 				}
 			}
 		}
