@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-"""Log Parser"""
+"""Log Parser function"""
 
 if __name__ == '__main__':
 

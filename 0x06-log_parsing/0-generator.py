@@ -1,4 +1,6 @@
 #!/usr/bin/python3
+""" random generator """
+
 import random
 import sys
 from time import sleep
