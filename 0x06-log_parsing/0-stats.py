@@ -1,39 +1,64 @@
 #!/usr/bin/python3
-"""Log Parser function"""
+'''interview of elements in an list'''
+import re
+import signal
+import sys
 
-if __name__ == '__main__':
 
-    def printer(size, d):
-        """Prainter function"""
-        a = sorted(d.keys())
-        print("File size: {:d}".format(size))
-        for i in a:
-            if d[i] != 0:
-                print("{}: {}".format(i, d[i]))
+def print_info(info, size):
+    codes = list(info.keys())
+    codes.sort()
+    print("File size: {}".format(size))
+    for code in codes:
+        print("{}: {}".format(code, info[code]))
 
-    size = 0
-    d = {"200": 0, "301": 0, "400": 0, "401": 0,
-         "403": 0, "404": 0, "405": 0, "500": 0}
 
-    counter = 0
-    try:
-        with open(0) as f:
-            for line in f:
-                counter += 1
-                arr = line.split()
-                try:
-                    size += int(arr[-1])
-                except:
-                    pass
-                try:
-                    st = arr[-2]
-                    if st in d:
-                        d[st] += 1
-                except:
-                    pass
-                if counter % 10 == 0:
-                    printer(size, d)
-            printer(size, d)
-    except KeyboardInterrupt:
-        printer(size, d)
-        raise
+def signal_handler(sig, frame):
+    pass
+
+
+def main():
+    valid_codes = [200, 301, 400, 401, 403, 404, 405, 500]
+    regex = {
+        "ip":
+            r"((?:(?:25[0-5]|2[0-4]\d|1?\d?\d)\.){3}"
+            "(?:25[0-5]|2[0-4]\d|1?\d?\d)|\w+)",
+
+        "date": r"(20\d{2}-[01]?\d-(?:3[01]|[0-2]\d))",
+
+        "time": "([0-5]\d:[0-5]\d:[0-5]\d\.\d+)",
+
+        "code": "(\w+)",
+
+        "size": "(\d+)",
+
+        "path": "/projects/260"
+    }
+
+    pattern = \
+        '^{ip} ?- ?\[{date} {time}\] "GET {path} HTTP/1.1" {code} {size}$'
+    pattern = pattern.format(**regex)
+
+    line_counter = 0
+    code_counter = {}
+    sizes = 0
+    signal.signal(signal.SIGINT, signal_handler)
+    for line in sys.stdin:
+        out = re.match(pattern, line)
+        if out:
+            line_counter += 1
+            sizes += int(out.group(5))
+            code = out.group(4)
+            if code in map(str, valid_codes):
+                if code not in code_counter.keys():
+                    code_counter[code] = 1
+                else:
+                    code_counter[code] += 1
+            if line_counter % 10 == 0:
+                print_info(code_counter, sizes)
+    if line_counter == 0 or line_counter % 10 != 0:
+        print_info(code_counter, sizes)
+
+
+if __name__ == "__main__":
+    main()
