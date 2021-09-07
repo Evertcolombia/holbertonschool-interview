@@ -2,26 +2,31 @@
 
 /**
  * check_cycle - check if a linked list is cycle
- * @list: node to the list
+ * @lsit: head of the list
  *
- * Return: 1 on success 0 on none
+ * Return: 1 on success, 0 on error
  */
 int check_cycle(listint_t *list)
 {
-	listint_t *t = NULL, *h = NULL;
+	listint_t *tortoise = NULL;
+	listint_t *hare = NULL, *tmp = NULL;
 
 	if (list == NULL)
 		return (0);
+	tortoise = hare = tmp = list;
 
-	t = h = list;
-	while (t != NULL && h != NULL)
+	while (true)
 	{
-		h = h->next->next;
-		if (h == NULL)
+		if (hare->next == NULL || hare->next->next == NULL)
 			return (0);
-		if (h == t)
+		hare = hare->next->next;
+
+		if (tortoise->next == NULL)
+			return (0);
+		tortoise = tortoise->next;
+		
+		if (hare->n == tmp->n || tortoise->n == hare->n)
 			return (1);
-		t = t->next;
 	}
 	return (0);
 }
