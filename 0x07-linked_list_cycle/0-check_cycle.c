@@ -2,7 +2,7 @@
 
 /**
  * check_cycle - check if a linked list is cycle
- * @lsit: head of the list
+ * @list: head of the list
  *
  * Return: 1 on success, 0 on error
  */
@@ -24,7 +24,7 @@ int check_cycle(listint_t *list)
 		if (tortoise->next == NULL)
 			return (0);
 		tortoise = tortoise->next;
-		
+
 		if (hare->n == tmp->n || tortoise->n == hare->n)
 			return (1);
 	}
