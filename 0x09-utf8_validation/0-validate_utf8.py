@@ -1,8 +1,13 @@
 #!/usr/bin/python3
+
 from itertools import takewhile
 
 
 def to_bits(bytes):
+    """
+	convert in bits the bytes
+	:type bytes: List[int]
+    """
     for byte in bytes:
         num = []
         exp = 1 << 8
