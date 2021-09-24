@@ -4,9 +4,9 @@ from itertools import takewhile
 
 
 def to_bits(bytes):
-    """
-	convert in bits the bytes
-	:type bytes: List[int]
+    """convert in bits the bytes
+
+       :type bytes: List[int]
     """
     for byte in bytes:
         num = []
@@ -28,13 +28,13 @@ def validUTF8(data):
         # single byte char
         if byte[0] == 0:
             continue
-        
+
         amount = sum(takewhile(bool, byte))
         if amount <= 1:
             return false
         if amount >= 4:
             return false
-        
+
         for _ in range(amount - 1):
             try:
                 byte = next(bits)
