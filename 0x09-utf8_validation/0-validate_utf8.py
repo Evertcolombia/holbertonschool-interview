@@ -34,9 +34,9 @@ def validUTF8(data):
 
         amount = sum(takewhile(bool, byte))
         if amount <= 1:
-            return false
+            return False
         if amount >= 4:
-            return false
+            return False
 
         for _ in range(amount - 1):
             try:
