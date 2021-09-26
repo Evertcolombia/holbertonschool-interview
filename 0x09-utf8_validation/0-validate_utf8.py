@@ -1,6 +1,9 @@
 #!/usr/bin/python3
 
 from itertools import takewhile
+"""
+method that determines if a given data set represents a valid UTF-8 encoding.
+"""
 
 
 def to_bits(bytes):
