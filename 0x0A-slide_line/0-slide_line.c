@@ -1,24 +1,35 @@
 #include "slide_line.h"
 
-int *resolve_line(int *line, int *slides, int len)
+static void print_array(int const *array, size_t size)
+{
+    size_t i;
+
+    printf("Line: ");
+    for (i = 0; i < size; i++)
+        printf("%s%d", i > 0 ? ", " : "", array[i]);
+    printf("\n");
+}
+
+void resolve_line(int *line, int *slides, int len)
 {
 	int i = 0, *head;
 
 	head = line;
-
+	/*printf("len: %d - s: %d\n", len, *slides);*/
+	
 	for (; i < len; i++)
 	{
-		*head = slides[len--];
-		head++;
+		*head = *slides;
+		head++, ++slides;
 	}
-	return(line);
+
 }
 
 
 void slide_left(int *line, size_t size)
 {
 	int slides [100], len = 0;
-	int count =  (int) size, *head;
+	int count = (int) size, *head;
 	bool con = false;
 
 	if (line != NULL)
@@ -30,9 +41,9 @@ void slide_left(int *line, size_t size)
 		printf("%d\n", *head);
 		if (*head > 0)
 		{
-			if (len > 0 && slides[len] == *head && !con)
+			if (len > 0 && slides[len - 1] == *head && !con)
 			{
-				slides[len] *= 2;
+				slides[len - 1] *= 2;
 				con = true;
 			}
 			else
@@ -45,8 +56,11 @@ void slide_left(int *line, size_t size)
 		--head;
 	}
 
+	print_array(slides, size);
+	print_array(line, size);
+	
 	if (len > 0)
-		line = resolve_line(line, slides, len);
+		/*line = */resolve_line(line, slides, len);
 }
 
 int *slide_right(int *line, size_t size)
@@ -77,8 +91,8 @@ int *slide_right(int *line, size_t size)
 		--head;
 	}
 
-	if (len > 0)
-		line = resolve_line(line, slides, len);
+	/*if (len > 0)
+		line = resolve_line(line, slides, len);*/
 
 	return(line);
 }
