@@ -1,6 +1,6 @@
 #include "slide_line.h"
 
-static void print_array(int const *array, size_t size)
+/*static void print_array(int const *array, size_t size)
 {
     size_t i;
 
@@ -8,28 +8,41 @@ static void print_array(int const *array, size_t size)
     for (i = 0; i < size; i++)
         printf("%s%d", i > 0 ? ", " : "", array[i]);
     printf("\n");
-}
+}*/
 
-void resolve_line(int *line, int *slides, int len)
+void resolve_line(int *line, int *slides, int len, int size, int direction)
 {
 	int i = 0, *head;
 
-	head = line;
-	/*printf("len: %d - s: %d\n", len, *slides);*/
-	
-	for (; i < len; i++)
-	{
-		*head = *slides;
-		head++, ++slides;
-	}
 
+	if (direction == 0)	/* Left style */
+	{
+		head = line;
+		slides = slides + (len - 1);
+
+		for (i = 0; i < len; i++)
+		{
+			*head = *slides;
+			head++, --slides;
+		}
+	}
+	else	/* Right style */
+	{
+		head = line + (size - 1);
+
+		for (; len > 0; len--)
+		{
+			*head = *slides;
+			--head, slides++;
+		}
+	}
 }
 
 
 void slide_left(int *line, size_t size)
 {
 	int slides [100], len = 0;
-	int count = (int) size, *head;
+	int count =  (int) size, *head;
 	bool con = false;
 
 	if (line != NULL)
@@ -38,7 +51,7 @@ void slide_left(int *line, size_t size)
 	for (; count > 0; count--)
 	{
 
-		printf("%d\n", *head);
+		/*printf("%d\n", *head);*/
 		if (*head > 0)
 		{
 			if (len > 0 && slides[len - 1] == *head && !con)
@@ -56,11 +69,11 @@ void slide_left(int *line, size_t size)
 		--head;
 	}
 
-	print_array(slides, size);
-	print_array(line, size);
+	/*print_array(slides, size);
+	print_array(line, size);*/
 	
 	if (len > 0)
-		/*line = */resolve_line(line, slides, len);
+		resolve_line(line, slides, len, 0, 0);
 }
 
 int *slide_right(int *line, size_t size)
@@ -76,9 +89,9 @@ int *slide_right(int *line, size_t size)
 	{
 		if (*head > 0)
 		{
-			if (len > 0 && slides[len] == *head && !con)
+			if (len > 0 && slides[len - 1] == *head && !con)
 			{
-				slides[len] *= 2;
+				slides[len - 1] *= 2;
 				con = true;
 			}
 			else
@@ -88,11 +101,13 @@ int *slide_right(int *line, size_t size)
 			}
 			*head = 0;
 		}
-		--head;
+		head++;
 	}
 
-	/*if (len > 0)
-		line = resolve_line(line, slides, len);*/
+	/*print_array(slides, size);
+	print_array(line, size);*/
+	if (len > 0)
+		resolve_line(line, slides, len, (int) size, 1);
 
 	return(line);
 }
