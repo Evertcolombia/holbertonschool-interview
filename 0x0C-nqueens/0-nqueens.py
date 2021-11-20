@@ -4,7 +4,7 @@ import sys
 
 
 def nqueens(queens, xy_diff, xy_sum):
-    """Finds all valid queen column positions that don't attack each other
+    """Finds alll valid queen column positions that don't attack each other
     Args:
         queens: columns occupied by queens
         xy_diff: positive slope diagonals occupied by queens
